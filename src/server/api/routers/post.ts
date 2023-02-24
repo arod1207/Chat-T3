@@ -28,7 +28,7 @@ export const postRouter = createTRPCRouter({
   getAllPost: publicProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(50).default(10),
+        limit: z.number().min(1).max(15).default(10),
         cursor: z.string().nullish(),
       })
     )

@@ -4,7 +4,7 @@ export default function Navbar() {
   const { data: sessionData } = useSession();
 
   return (
-    <div className="flex h-20 items-center justify-between bg-black px-6">
+    <div className="flex h-20 items-center justify-between bg-gradient-to-r from-transparent  to-black px-6">
       <h1 className="text-2xl font-bold text-white">Chat T3</h1>
       <div className="flex items-center space-x-6">
         <button
