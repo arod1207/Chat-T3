@@ -9,7 +9,10 @@ export default function Posts() {
     <>
       {posts.data
         ? posts.data.map((t) => (
-            <div className="m-auto mt-6  w-1/2 gap-2 rounded-md bg-white px-6 shadow-md">
+            <div
+              key={t.id}
+              className="m-auto mt-6  w-1/2 gap-2 rounded-md bg-white px-6 shadow-md"
+            >
               <div className="flex items-center  space-x-2 p-2">
                 <img
                   src={t.author.image || undefined}

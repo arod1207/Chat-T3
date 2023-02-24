@@ -8,7 +8,9 @@ import {
 
 export const postRouter = createTRPCRouter({
   addPost: protectedProcedure
-    .input(z.string())
+    .input(
+      z.string({ required_error: "Please add a message!" }).min(1).max(150)
+    )
     .mutation(async ({ ctx, input }) => {
       const post = await ctx.prisma.post.create({
         data: {

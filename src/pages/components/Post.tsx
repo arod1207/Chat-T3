@@ -1,5 +1,7 @@
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { FormEvent } from "react";
+import { toast } from "react-hot-toast";
 
 import { api } from "~/utils/api";
 
@@ -7,10 +9,32 @@ export default function Post() {
   const [text, setText] = useState("");
 
   const utils = api.useContext();
+  const { data: sessionData } = useSession();
 
   const { mutate: addPostMutate } = api.post.addPost.useMutation({
+    onError(err) {
+      const errorMessage = JSON.parse(err.message);
+      toast(errorMessage[0].message, {
+        icon: "❌",
+        duration: 2000,
+        style: {
+          background: "#ffffff",
+          color: "#000",
+          fontWeight: "bold",
+        },
+      });
+    },
     onSuccess() {
       utils.post.invalidate();
+      toast("Post Added", {
+        icon: "🔥",
+        duration: 2000,
+        style: {
+          background: "#A855F7",
+          color: "#000",
+          fontWeight: "bold",
+        },
+      });
       setText("");
     },
   });
@@ -31,9 +55,11 @@ export default function Post() {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button className="rounded bg-white p-2 font-semibold hover:bg-slate-100">
-          Submit
-        </button>
+        {sessionData && (
+          <button className="rounded bg-white p-2 font-semibold hover:bg-slate-100">
+            Submit
+          </button>
+        )}
       </form>
     </div>
   );
