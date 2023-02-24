@@ -16,7 +16,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen items-center justify-center bg-purple-500">
-        <h1 className="text-[100px] font-bold text-white">Chat T3</h1>
+        <div className="flex flex-col items-center">
+          <h1 className="text-[100px] font-bold text-white">Chat T3</h1>
+          <button className="w-1/2 rounded-md bg-purple-800 p-2 font-semibold text-white hover:bg-purple-900">
+            Login with Discord
+          </button>
+        </div>
       </main>
     </>
   );
