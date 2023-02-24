@@ -1,8 +1,8 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-
-import { api } from "~/utils/api";
 import Navbar from "./components/Navbar";
+import Post from "./components/Post";
+import Posts from "./components/Posts";
 
 const Home: NextPage = () => {
   return (
@@ -14,6 +14,9 @@ const Home: NextPage = () => {
       </Head>
       <main className="min-h-screen  bg-purple-500">
         <Navbar />
+        <Post />
+        {/* // User Posts // */}
+        <Posts />
       </main>
     </>
   );
