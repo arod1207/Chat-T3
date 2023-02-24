@@ -22,16 +22,18 @@ export default function Post() {
   };
 
   return (
-    <div className="m-auto mt-10 flex w-full justify-center ">
+    <div className="m-auto mt-10 flex justify-center ">
       <form onSubmit={handleAddPost} className="space-x-2">
         <input
           type="text"
           placeholder="What's on your mind?"
-          className="w-96 rounded p-2"
+          className="w-96 rounded p-2 drop-shadow-lg"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button className="rounded bg-white p-2 font-semibold">Submit</button>
+        <button className="rounded bg-white p-2 font-semibold hover:bg-slate-100">
+          Submit
+        </button>
       </form>
     </div>
   );
