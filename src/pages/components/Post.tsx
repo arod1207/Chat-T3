@@ -6,7 +6,14 @@ import { api } from "~/utils/api";
 export default function Post() {
   const [text, setText] = useState("");
 
-  const { mutate: addPostMutate } = api.post.addPost.useMutation();
+  const utils = api.useContext();
+
+  const { mutate: addPostMutate } = api.post.addPost.useMutation({
+    onSuccess() {
+      utils.post.invalidate();
+      setText("");
+    },
+  });
 
   //Add Post//
   const handleAddPost = (e: FormEvent<HTMLFormElement>) => {

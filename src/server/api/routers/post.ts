@@ -15,7 +15,7 @@ export const postRouter = createTRPCRouter({
           message: input,
           author: {
             connect: {
-              id: ctx.session.user.email || undefined,
+              id: ctx.session.user.id || undefined,
             },
           },
         },
@@ -24,10 +24,10 @@ export const postRouter = createTRPCRouter({
     }),
 
   getAllPost: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.post.findMany();
-  }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
+    return ctx.prisma.post.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
   }),
 });
