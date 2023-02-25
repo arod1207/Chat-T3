@@ -1,4 +1,4 @@
-import { CloseSVG, TrashCanSVG } from "./SVGs";
+import { CloseSVG, TrashCanSVG } from "../../lib/SVGs";
 import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
 
