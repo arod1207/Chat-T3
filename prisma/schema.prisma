@@ -74,4 +74,5 @@ model Post {
     updatedAt DateTime @default(now())
     userId    String
     author    User     @relation(fields: [userId], references: [id])
+    likes     Int      @default(0)
 }

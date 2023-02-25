@@ -84,4 +84,15 @@ export const postRouter = createTRPCRouter({
       });
       return deletedPost;
     }),
+  //Like a post//
+  likePost: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const likedPost = await ctx.prisma.post.findUnique({
+        where: {
+          id: input,
+        },
+      });
+      return likedPost;
+    }),
 });

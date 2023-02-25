@@ -12,12 +12,14 @@ export default function Posts() {
 
   const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
+  console.log(posts);
+
   return (
     <div className="mx-2">
       {posts.flatMap((t) => (
         <div
           key={t.id}
-          className="m-auto mt-6 flex h-32 w-full items-center gap-2 rounded-md bg-white px-6 shadow-md md:w-1/2"
+          className="relative m-auto mt-6 flex h-32 w-full items-center gap-2 rounded-md bg-white px-6 shadow-md md:w-1/2"
         >
           <div className="flex space-x-2">
             <img
@@ -37,6 +39,9 @@ export default function Posts() {
               </div>
               <p>{t.message}</p>
             </div>
+          </div>
+          <div className="absolute bottom-2 right-4">
+            💝 <span className="text-sm font-semibold">10 Likes</span>
           </div>
         </div>
       ))}
