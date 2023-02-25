@@ -61,4 +61,27 @@ export const postRouter = createTRPCRouter({
         nextCursor,
       };
     }),
+  // Get Users Post//
+  getUserPost: protectedProcedure.query(async ({ ctx }) => {
+    const userPost = await ctx.prisma.post.findMany({
+      where: {
+        author: {
+          id: ctx.session.user.id,
+        },
+      },
+    });
+    return userPost;
+  }),
+
+  //Delete User Post//
+  deleteUserPost: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const deletedPost = await ctx.prisma.post.delete({
+        where: {
+          id: input,
+        },
+      });
+      return deletedPost;
+    }),
 });
