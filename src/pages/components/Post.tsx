@@ -46,9 +46,9 @@ export default function Post() {
   };
 
   return (
-    <>
+    <div className="mt-10 px-2">
       {sessionData ? (
-        <div className="relative m-auto mt-10 flex h-32  w-1/2 items-center justify-center rounded-md bg-purple-700 shadow-md">
+        <div className="relative  flex h-32 w-full items-center justify-center  rounded-md bg-purple-700  shadow-md md:m-auto md:w-1/2">
           <form
             onSubmit={handleAddPost}
             className="mx-6 flex w-full justify-center space-x-2"
@@ -83,6 +83,6 @@ export default function Post() {
           </h1>
         </div>
       )}
-    </>
+    </div>
   );
 }
