@@ -1,8 +1,12 @@
 import { api } from "~/utils/api";
 import Moment from "react-moment";
 import RingLoader from "react-spinners/RingLoader";
+import { useSession } from "next-auth/react";
+import { toast } from "react-hot-toast";
 
 export default function Posts() {
+  const { data: sessionData } = useSession();
+
   const { data, hasNextPage, fetchNextPage, isFetching, isLoading } =
     api.post.getAllPost.useInfiniteQuery(
       { limit: 10 },
@@ -17,6 +21,15 @@ export default function Posts() {
 
   const { mutate: likeMutation } = api.post.likePost.useMutation({
     onSuccess() {
+      toast("Post Liked", {
+        icon: "🔥",
+        duration: 2000,
+        style: {
+          background: "#A855F7",
+          color: "#000",
+          fontWeight: "bold",
+        },
+      });
       utils.invalidate();
     },
   });
@@ -61,7 +74,11 @@ export default function Posts() {
             </div>
           </div>
           <div
-            className="absolute bottom-2 right-4 cursor-pointer"
+            className={
+              sessionData
+                ? "absolute bottom-2 right-4 cursor-pointer"
+                : "absolute bottom-2 right-4 cursor-default"
+            }
             onClick={() => {
               if (t.likes.length > 0) {
                 unlikeMutation({ likeId: t.id });
