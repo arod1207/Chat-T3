@@ -2,7 +2,7 @@ import { api } from "~/utils/api";
 import Moment from "react-moment";
 
 export default function Posts() {
-  const { data, hasNextPage, fetchNextPage, isFetching } =
+  const { data, hasNextPage, fetchNextPage, isFetching, isLoading } =
     api.post.getAllPost.useInfiniteQuery(
       { limit: 10 },
       {
@@ -12,7 +12,22 @@ export default function Posts() {
 
   const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
-  console.log(posts);
+  const utils = api.useContext();
+
+  const { mutate: likeMutation } = api.post.likePost.useMutation({
+    onSuccess() {
+      utils.invalidate();
+    },
+  });
+  const { mutate: unlikeMutation } = api.post.unlikePost.useMutation({
+    onSuccess() {
+      utils.invalidate();
+    },
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="mx-2">
@@ -40,8 +55,17 @@ export default function Posts() {
               <p>{t.message}</p>
             </div>
           </div>
-          <div className="absolute bottom-2 right-4">
-            💝 <span className="text-sm font-semibold">10 Likes</span>
+          <div
+            className="absolute bottom-2 right-4 cursor-pointer"
+            onClick={() => {
+              if (t.likes.length > 0) {
+                unlikeMutation({ likeId: t.id });
+                return;
+              }
+              likeMutation({ likeId: t.id });
+            }}
+          >
+            💝 <span className="text-sm font-semibold">{t._count.likes}</span>
           </div>
         </div>
       ))}
