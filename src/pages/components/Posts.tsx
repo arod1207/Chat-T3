@@ -1,5 +1,6 @@
 import { api } from "~/utils/api";
 import Moment from "react-moment";
+import RingLoader from "react-spinners/RingLoader";
 
 export default function Posts() {
   const { data, hasNextPage, fetchNextPage, isFetching, isLoading } =
@@ -26,7 +27,11 @@ export default function Posts() {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center">
+        <RingLoader color="#ffffff" />
+      </div>
+    );
   }
 
   return (
