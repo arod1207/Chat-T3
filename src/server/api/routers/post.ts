@@ -12,7 +12,7 @@ export const postRouter = createTRPCRouter({
       z.string({ required_error: "Please add a message!" }).min(1).max(150)
     )
     .mutation(async ({ ctx, input }) => {
-      const post = await ctx.prisma.post.create({
+      return await ctx.prisma.post.create({
         data: {
           message: input,
           author: {
@@ -22,7 +22,6 @@ export const postRouter = createTRPCRouter({
           },
         },
       });
-      return post;
     }),
 
   getAllPost: publicProcedure
@@ -34,6 +33,7 @@ export const postRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { cursor, limit } = input;
+      const userId = ctx.session?.user.id;
       const posts = await ctx.prisma.post.findMany({
         take: limit + 1,
         cursor: cursor ? { id: cursor } : undefined,
@@ -43,10 +43,23 @@ export const postRouter = createTRPCRouter({
           },
         ],
         include: {
+          likes: {
+            where: {
+              userId,
+            },
+            select: {
+              like: true,
+            },
+          },
           author: {
             select: {
               name: true,
               image: true,
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
             },
           },
         },
@@ -83,5 +96,40 @@ export const postRouter = createTRPCRouter({
         },
       });
       return deletedPost;
+    }),
+  //Like a post//
+  likePost: protectedProcedure
+    .input(z.object({ likeId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      return await ctx.prisma.like.create({
+        data: {
+          like: {
+            connect: {
+              id: input.likeId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
+    }),
+  unlikePost: protectedProcedure
+    .input(z.object({ likeId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      return await ctx.prisma.like.delete({
+        where: {
+          likeId_userId: {
+            likeId: input.likeId,
+            userId,
+          },
+        },
+      });
     }),
 });

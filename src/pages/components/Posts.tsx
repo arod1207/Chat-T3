@@ -1,8 +1,9 @@
 import { api } from "~/utils/api";
 import Moment from "react-moment";
+import RingLoader from "react-spinners/RingLoader";
 
 export default function Posts() {
-  const { data, hasNextPage, fetchNextPage, isFetching } =
+  const { data, hasNextPage, fetchNextPage, isFetching, isLoading } =
     api.post.getAllPost.useInfiniteQuery(
       { limit: 10 },
       {
@@ -12,12 +13,33 @@ export default function Posts() {
 
   const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
+  const utils = api.useContext();
+
+  const { mutate: likeMutation } = api.post.likePost.useMutation({
+    onSuccess() {
+      utils.invalidate();
+    },
+  });
+  const { mutate: unlikeMutation } = api.post.unlikePost.useMutation({
+    onSuccess() {
+      utils.invalidate();
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center">
+        <RingLoader color="#ffffff" />
+      </div>
+    );
+  }
+
   return (
     <div className="mx-2">
       {posts.flatMap((t) => (
         <div
           key={t.id}
-          className="m-auto mt-6 flex h-32 w-full items-center gap-2 rounded-md bg-white px-6 shadow-md md:w-1/2"
+          className="relative m-auto mt-6 flex h-32 w-full items-center gap-2 rounded-md bg-white px-6 shadow-md md:w-1/2"
         >
           <div className="flex space-x-2">
             <img
@@ -37,6 +59,18 @@ export default function Posts() {
               </div>
               <p>{t.message}</p>
             </div>
+          </div>
+          <div
+            className="absolute bottom-2 right-4 cursor-pointer"
+            onClick={() => {
+              if (t.likes.length > 0) {
+                unlikeMutation({ likeId: t.id });
+                return;
+              }
+              likeMutation({ likeId: t.id });
+            }}
+          >
+            💝 <span className="text-sm font-semibold">{t._count.likes}</span>
           </div>
         </div>
       ))}
